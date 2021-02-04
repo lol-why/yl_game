@@ -55,8 +55,8 @@ class Dash:
         pass
 
 
-test = 0
 screen = pygame.display.set_mode((display["width"], display["height"]))
+displ = pygame.display.set_mode((display["width"], display["height"]))
 
 
 def get_pos(pos):
@@ -152,6 +152,15 @@ def cJump():  # Continue Jump
         jumping = 0
 
 
+def print_progress():
+    if spike['pass'] < 100:  # Win Statement
+        text_surface_2 = font.render("Percentage {0}%".format(spike['pass']), False, (0, 0, 0))
+        displ.blit(text_surface_2, (300, 10))
+    else:
+        text_surface_2 = font.render("YOU WIN", False, (255, 0, 0))
+        displ.blit(text_surface_2, (300, 10))
+
+
 def next_step():
     cJump()
     pygame.draw.rect(displ, (255, 0, 0),
@@ -169,37 +178,25 @@ def check_next_ses(charar_x):
     return False
 
 
-# Launching the window, setting it to the dimensions of the `display` dictionary.
-displ = pygame.display.set_mode((display["width"], display["height"]))
-
-
 while True:  # Main Game Loop
     pygame.time.delay(10)
     displ.fill((255, 255, 255))
     for i in range(spike['amount']):  # Spike Drawing
         triangleDraw(i)
-    for event in pygame.event.get():  # Quit statement
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] or keys[pygame.K_w]:  # Checks if need to Jump
+        if keys[pygame.K_SPACE] or keys[pygame.K_w]:  # Checks Jump
             jump()
     if check_next_ses(character['x']):
         nextSection()
-    if spike['pass'] < 100:  # Win Statement
-        text_surface2 = font.render("Percentage {0}%".format(spike['pass']), False, (0, 0, 0))
-        displ.blit(text_surface2, (300, 10))
-    else:
-        text_surface2 = font.render("YOU WIN", False, (255, 0, 0))
-        displ.blit(text_surface2, (300, 10))
-        break
+    print_progress()
     for i in range(spike['amount']):  # Checks if death occurs
         if spike['x'] + spike['distanceApart'] * i <= character['x'] <= spike['x'] \
                 + spike['distanceApart'] * i + spike['length']:
 
             posOnSpike = abs(character['x'] - (spike['x'] + spike['length'] / 2))
-            test = 1
-
             if posOnSpike * 2 + spike['y'] > character['y'] > spike['y'] \
                     or posOnSpike * 2 + spike['y'] > character['y'] + character['height'] > spike['y']:
                 text_surface2 = font.render("YOU LOSE", False, (255, 0, 0))
