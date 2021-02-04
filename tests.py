@@ -163,6 +163,12 @@ def next_step():
     spike['x'] -= 5
 
 
+def check_next_ses(charar_x):
+    if spike['x'] + spike['distanceApart'] * spike['amount'] < charar_x:
+        return True
+    return False
+
+
 # Launching the window, setting it to the dimensions of the `display` dictionary.
 displ = pygame.display.set_mode((display["width"], display["height"]))
 
@@ -178,7 +184,7 @@ while True:  # Main Game Loop
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] or keys[pygame.K_w]:  # Checks if need to Jump
             jump()
-    if spike['x'] + spike['distanceApart'] * spike['amount'] < character['x']:  # checks to start next section
+    if check_next_ses(character['x']):
         nextSection()
     if spike['pass'] < 100:  # Win Statement
         text_surface2 = font.render("Percentage {0}%".format(spike['pass']), False, (0, 0, 0))
@@ -206,3 +212,9 @@ while True:  # Main Game Loop
     next_step()
     if is_dead:
         break
+
+
+
+
+
+
