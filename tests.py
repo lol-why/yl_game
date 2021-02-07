@@ -1,4 +1,5 @@
 import pygame
+from funct import load_image
 from random import randint
 import sys
 import os
@@ -9,14 +10,21 @@ score = 0
 total = 0
 
 font = pygame.font.SysFont('f', 50)
-
-
+all_sprites = pygame.sprite.Group
+player_image = load
 # Jumping Variables
 yVel = 0
 jumping = 0
 # if ghoul)
 is_dead = False
 
+
+class Dash(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(player_group, all_sprites)
+        self.image = player_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 15, tile_height * pos_y + 5)
 
 display = {
     "width": 1280,
@@ -50,19 +58,6 @@ spike = {
 }
 
 
-class Dash:
-    def __init__(self):
-        pass
-
-
-screen = pygame.display.set_mode((display["width"], display["height"]))
-displ = pygame.display.set_mode((display["width"], display["height"]))
-
-
-def get_pos(pos):
-    return pos[0], pos[1]
-
-
 def load_image(name):
     fullname = os.path.join(f'data/{name}')
     # если файл не существует, то выходим
@@ -71,6 +66,22 @@ def load_image(name):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
+
+class Dash:
+    def __init__(self):
+        pass
+
+
+screen = pygame.display.set_mode((display["width"], display["height"]))
+displ = pygame.display.set_mode((display["width"], display["height"]))
+fon = pygame.transform.scale(load_image('index.jpg'), (display["width"], display["height"]))
+
+
+def get_pos(pos):
+    return pos[0], pos[1]
+
+
 
 
 def terminate():
