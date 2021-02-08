@@ -12,9 +12,7 @@ total = 0
 font = pygame.font.SysFont('f', 50)
 all_sprites = pygame.sprite.Group
 player_image = load_image("dash.png")
-# Jumping Variables
-yVel = 0
-jumping = 0
+
 # if ghoul)
 is_dead = False
 
@@ -41,7 +39,7 @@ platform = {
     "distanceApart": 50
 }
 spike = {
-    "height": -15,
+    "height": 15,
     "y": 600,
     "x": 700,
     "pass": 0,
@@ -72,6 +70,10 @@ class Dash(pygame.sprite.Sprite):
 screen = pygame.display.set_mode((display["width"], display["height"]))
 displ = pygame.display.set_mode((display["width"], display["height"]))
 
+class Spikes(pygame.sprite.Sprite):
+    def __init__(self):
+        super.__init__()
+
 
 def get_pos(pos):
     return pos[0], pos[1]
@@ -97,6 +99,12 @@ def triangleDraw(num):  # Draws the triangles
                          (spike['x'] + spike['distanceApart'] * num + spike["length"], spike['y']),
                          (spike['x'] + spike['length'] / 2 + spike['distanceApart'] * num,
                           spike['y'] + spike['height'])))
+
+
+
+# Jumping Variables
+yVel = 0
+jumping = 0
 
 
 def jump():  # Start Jumping
@@ -165,7 +173,7 @@ while True:  # Main Game Loop
         triangleDraw(i)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            break
+            terminate()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] or keys[pygame.K_w]:  # Checks Jump
             jump()
@@ -188,4 +196,4 @@ while True:  # Main Game Loop
     # Drawing Stuff
     next_step()
     if is_dead:
-        break
+        terminate()
