@@ -11,20 +11,13 @@ total = 0
 
 font = pygame.font.SysFont('f', 50)
 all_sprites = pygame.sprite.Group
-player_image = load
+player_image = load_image("dash.png")
 # Jumping Variables
 yVel = 0
 jumping = 0
 # if ghoul)
 is_dead = False
 
-
-class Dash(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
-        self.image = player_image
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5)
 
 display = {
     "width": 1280,
@@ -68,20 +61,20 @@ def load_image(name):
     return image
 
 
-class Dash:
-    def __init__(self):
-        pass
+class Dash(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(all_sprites)
+        self.image = player_image
+        self.rect = self.image.get_rect().move(
+            -spike["height"] * pos_x + 15, -spike["height"] * pos_y + 5)
 
 
 screen = pygame.display.set_mode((display["width"], display["height"]))
 displ = pygame.display.set_mode((display["width"], display["height"]))
-fon = pygame.transform.scale(load_image('index.jpg'), (display["width"], display["height"]))
 
 
 def get_pos(pos):
     return pos[0], pos[1]
-
-
 
 
 def terminate():
@@ -95,32 +88,6 @@ def nextSection():
     spike['amount'] = randint(1, 4)
     spike['distanceApart'] = randint(2, 4) * 10
     return
-
-
-def start_screen():
-    intro_text = []
-
-    fon = pygame.transform.scale(load_image('start.png'), (display["width"], display["height"]))
-    screen.blit(fon, (0, 0))
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, True, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-    clock = pygame.time.Clock()
-    while True:
-        for even in pygame.event.get():
-            if even.type == pygame.QUIT:
-                terminate()
-            elif even.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
-        pygame.display.flip()
-        clock.tick(60)
 
 
 def triangleDraw(num):  # Draws the triangles
@@ -189,9 +156,11 @@ def check_next_ses(charar_x):
     return False
 
 
+bg = load_image('fon.jpg')
+
 while True:  # Main Game Loop
     pygame.time.delay(10)
-    displ.fill((255, 255, 255))
+    screen.blit(bg, (0, 0))
     for i in range(spike['amount']):  # Spike Drawing
         triangleDraw(i)
     for event in pygame.event.get():
@@ -220,9 +189,3 @@ while True:  # Main Game Loop
     next_step()
     if is_dead:
         break
-
-
-
-
-
-
