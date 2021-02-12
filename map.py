@@ -42,13 +42,12 @@ class Dash(pygame.sprite.Sprite):
         self.jumping = 0
         self.y_velocity = 0
         self.rect = self.image.get_rect().move(
-            self.pos_y, pos_x * 20
+            self.pos_y - 80, pos_x * 20
         )
 
     def update(self):
         self.rect[0] += self.velocity
         self.rect[1] -= self.y_velocity
-        cur_block = self.rect[0] // 20
         if self.jumping == 1:
             self.jumping = 2
         if 2 <= self.jumping < 6:  # 4 steps too
@@ -63,7 +62,9 @@ class Dash(pygame.sprite.Sprite):
         if self.jumping == 12:
             self.jumping = self.y_velocity = 0
         ##################
-        # if self.rect[0]
+        if self.rect[0] in platforms:
+            if self.rect[1] == 600:
+                self.is_dead = True
 
         # 1 jump = +40 -- x, +-80 -- y #
 
@@ -82,11 +83,10 @@ vel = 5px
 
 def made_map(maptxt):
     person, x, y = None, None, None
-    platform_height = {}
+    can_be = []
     with open(f'data/{maptxt}', 'r') as st_map:
         map1 = st_map.readlines()
     for x in range(len(map1)):
-        can_be = []
         for y in range(len(map1[x])):
             try:
                 if map1[x][y] == '@':
@@ -96,15 +96,18 @@ def made_map(maptxt):
                     tiles.add(Tile(x, y, spec[map1[x][y]]))
                     # its all for jumping
                     if spec[map1[x][y]] == 'spike':
-                        
-                            can_be.append(y)
+                        can_be.append(y)
             except KeyError:
                 pass
-        if len(can_be) != 0:
-            platform_height[x + 1] = can_be
-    return person, x, y, platform_height
+    return person, x, y, can_be
 
 
-platforms = made_map("map.txt")[3]  # blocks with their coord(first -- y * 20, second -- x * 20)
+def norm_coords(arr):
+    for i in range(len(arr)):
+        arr[i] *= 20
+    return arr
+
+
+platforms = norm_coords(made_map("map.txt")[3])  # blocks with their coord(first -- y * 20, second -- x * 20)
 print(platforms)
 

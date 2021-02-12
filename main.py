@@ -12,6 +12,7 @@ person, end_x, end_y, for_do = made_map("map.txt")  # координаты дл�
 bg = load_image('fon.jpg')  # задний фон
 while True:  # Main Game Loop
     # чек кнопок
+    #  pygame.time.delay(10)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
@@ -27,4 +28,4 @@ while True:  # Main Game Loop
     pygame.display.flip()
     person.update()
     screen.blit(bg, (0, 0))
-    clock.tick(120)
+    # lock.tick()
