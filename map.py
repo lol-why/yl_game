@@ -20,12 +20,23 @@ spec = {
 }
 
 
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, kind):
+        super().__init__(tiles, all_sprites)
+        pos_x = pos_x * 20
+        pos_y = pos_y * 20
+        self.image = images[kind]
+        self.rect = self.image.get_rect().move(
+            pos_y, pos_x
+        )
+
+
 class Dash(pygame.sprite.Sprite):
     def __init__(self, player_image, pos_x, pos_y):
         super().__init__(player, all_sprites)
         self.is_dead = False
         self.image = load_image(player_image)
-        self.velocity = 5
+        self.velocity = 10
         self.pos_y = pos_y * 20
         self.down_pos = pos_x * 20
         self.jumping = 0
@@ -37,20 +48,24 @@ class Dash(pygame.sprite.Sprite):
     def update(self):
         self.rect[0] += self.velocity
         self.rect[1] -= self.y_velocity
+        cur_block = self.rect[0] // 20
         if self.jumping == 1:
             self.jumping = 2
-        if 2 <= self.jumping < 6:
+        if 2 <= self.jumping < 6:  # 4 steps too
             self.jumping += 1
-        if self.jumping == 6:
+        if self.jumping == 6:  # 1 step for x
             self.y_velocity = 0
             self.jumping += 1
             print(self.rect[0], self.rect[1])
-            print(self.down_pos)
-        if 6 <= self.jumping < 12:
+        if 6 <= self.jumping < 12:  # 4 steps, 10 px
             self.jumping += 1
             self.y_velocity = -20
         if self.jumping == 12:
             self.jumping = self.y_velocity = 0
+        ##################
+        # if self.rect[0]
+
+        # 1 jump = +40 -- x, +-80 -- y #
 
     def jump(self):
         if self.jumping == 0:
@@ -58,15 +73,11 @@ class Dash(pygame.sprite.Sprite):
             self.y_velocity = 20
 
 
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, kind):
-        super().__init__(tiles, all_sprites)
-        pos_x = pos_x * 20
-        pos_y = pos_y * 20
-        self.image = images[kind]
-        self.rect = self.image.get_rect().move(
-            pos_y, pos_x
-        )
+"""
+1 block = (20px; 20px)
+vel = 5px
+1 jump = (40px; 80px-+)
+"""
 
 
 def made_map(maptxt):
@@ -84,14 +95,9 @@ def made_map(maptxt):
                 else:
                     tiles.add(Tile(x, y, spec[map1[x][y]]))
                     # its all for jumping
-                    if spec[map1[x][y]] == 'block':
-                        try:
-                            for plat in platform_height:
-                                if y in platform_height[plat]:
-                                    raise ValueError
+                    if spec[map1[x][y]] == 'spike':
+                        
                             can_be.append(y)
-                        except ValueError:
-                            pass
             except KeyError:
                 pass
         if len(can_be) != 0:
@@ -99,10 +105,6 @@ def made_map(maptxt):
     return person, x, y, platform_height
 
 
-def do_norm_platf(first_l):  # platforms and their coord
-    norm_plat = {}
-    for i in first_l:
-        for j in first_l[i]:
-            norm_plat[j] = i
+platforms = made_map("map.txt")[3]  # blocks with their coord(first -- y * 20, second -- x * 20)
+print(platforms)
 
-    return norm_plat

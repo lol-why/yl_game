@@ -1,8 +1,8 @@
 import pygame
-from funct import load_image
+from funct import load_image, terminate
 from random import randint
 import sys
-import os
+from param import spike, display, character, platform
 
 pygame.init()
 
@@ -17,71 +17,8 @@ player_image = load_image("dash.png")
 is_dead = False
 
 
-display = {
-    "width": 1280,
-    "height": 720
-}
-
-character = {
-    "width": 20,
-    "height": 20,
-    "x": 200,
-    "y": 580,
-    "velocity": 50
-}
-
-platform = {
-    'y': 580,
-    "x": 700,
-    "pass": 0,
-    "length": 20,
-    "amount": 2,
-    "distanceApart": 50
-}
-spike = {
-    "height": 15,
-    "y": 600,
-    "x": 700,
-    "pass": 0,
-    "length": 20,
-    "amount": 2,
-    "distanceApart": 50
-}
-
-
-def load_image(name):
-    fullname = os.path.join(f'data/{name}')
-    # если файл не существует, то выходим
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    return image
-
-
-class Dash(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(all_sprites)
-        self.image = player_image
-        self.rect = self.image.get_rect().move(
-            -spike["height"] * pos_x + 15, -spike["height"] * pos_y + 5)
-
-
 screen = pygame.display.set_mode((display["width"], display["height"]))
 displ = pygame.display.set_mode((display["width"], display["height"]))
-
-class Spikes(pygame.sprite.Sprite):
-    def __init__(self):
-        super.__init__()
-
-
-def get_pos(pos):
-    return pos[0], pos[1]
-
-
-def terminate():
-    pygame.quit()
-    sys.exit()
 
 
 def nextSection():
@@ -93,13 +30,13 @@ def nextSection():
 
 
 def triangleDraw(num):  # Draws the triangles
-    pygame.draw.polygon(displ,
-                        (0, 0, 0),
-                        ((spike["x"] + spike['distanceApart'] * num, spike["y"]),
-                         (spike['x'] + spike['distanceApart'] * num + spike["length"], spike['y']),
-                         (spike['x'] + spike['length'] / 2 + spike['distanceApart'] * num,
-                          spike['y'] + spike['height'])))
-
+    pygame.draw.polygon(
+        displ,
+        (0, 0, 0),
+        ((spike["x"] + spike['distanceApart'] * num, spike["y"]),
+         (spike['x'] + spike['distanceApart'] * num + spike["length"], spike['y']),
+         (spike['x'] + spike['length'] / 2 + spike['distanceApart'] * num,
+          spike['y'] + spike['height'])))
 
 
 # Jumping Variables
@@ -128,7 +65,7 @@ def cJump():  # Continue Jump
         else:
             jumping = 1
     if jumping == 1:
-        character['y'] = character['y'] - yVel
+        character['y'] -= yVel
         if character['y'] > platform['y']:
             jumping = 2
         yVel -= 0.5
@@ -168,7 +105,6 @@ bg = load_image('fon.jpg')
 
 while True:  # Main Game Loop
     pygame.time.delay(10)
-    screen.blit(bg, (0, 0))
     for i in range(spike['amount']):  # Spike Drawing
         triangleDraw(i)
     for event in pygame.event.get():
@@ -190,10 +126,8 @@ while True:  # Main Game Loop
                 text_surface2 = font.render("YOU LOSE", False, (255, 0, 0))
                 displ.blit(text_surface2, (300, 60))
                 is_dead = True
-
-        else:
-            pass
     # Drawing Stuff
     next_step()
     if is_dead:
         terminate()
+    screen.blit(bg, (0, 0))

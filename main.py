@@ -1,7 +1,7 @@
 import pygame
 from funct import load_image, terminate
 from param import display
-from map import made_map, tiles, player, all_sprites, do_norm_platf
+from map import made_map, tiles, player, all_sprites
 
 
 pygame.init()  # инициализация
@@ -27,4 +27,4 @@ while True:  # Main Game Loop
     pygame.display.flip()
     person.update()
     screen.blit(bg, (0, 0))
-    clock.tick(60)
+    clock.tick(120)
